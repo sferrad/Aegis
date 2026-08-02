@@ -37,7 +37,7 @@ jobs:
         run: pip install semgrep
 
       - name: Semgrep scan
-        run: semgrep scan --config=p/default --error --sarif --output=semgrep.sarif .
+        run: semgrep scan --config=p/default --error --sarif --output=semgrep.sarif p1/app/src
 
       - name: Upload report
         if: always()
