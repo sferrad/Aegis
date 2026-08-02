@@ -56,7 +56,7 @@ Run qui échoue volontairement (secret détecté) :
 
 ```bash
 git checkout -b test-secret-leak
-printf 'github_pat = "ghp_wWPw5k4aXcaT4fNP0UcnZwJUVFk6LO0pALZo"\n' > p2/leaked_secret.txt
+printf 'github_pat = "ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"\n' > p2/leaked_secret.txt
 git add p2/leaked_secret.txt
 git commit -m "test: secret detectable"
 git push -u origin test-secret-leak
