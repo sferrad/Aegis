@@ -45,3 +45,26 @@ jobs:
         with:
           name: semgrep-report
           path: semgrep.sarif
+  
+  sca:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Dependency scan (SCA)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+          scan-ref: p1/app
+          severity: HIGH,CRITICAL
+          exit-code: 1
+          format: sarif
+          output: trivy-sca.sarif
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sca-report
+          path: trivy-sca.sarif
