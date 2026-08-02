@@ -68,3 +68,29 @@ jobs:
         with:
           name: sca-report
           path: trivy-sca.sarif
+  
+  image-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -f p1/confs/Dockerfile -t aegis:ci p1
+
+      - name: Scan image
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: image
+          image-ref: aegis:ci
+          severity: HIGH,CRITICAL
+          exit-code: 1
+          format: sarif
+          output: trivy-image.sarif
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-scan-report
+          path: trivy-image.sarif
