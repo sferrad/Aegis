@@ -106,7 +106,7 @@ jobs:
           name: image-scan-report
           path: trivy-image.json
   
-    checkov:
+  checkov:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
