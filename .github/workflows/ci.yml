@@ -89,6 +89,30 @@ jobs:
             --format json --output /out/trivy-image.json \
             aegis:ci
 
+            - name: Scan image (report)
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v ${{ github.workspace }}:/out \
+            aquasec/trivy image \
+            --severity HIGH,CRITICAL \
+            --scanners vuln \
+            --ignorefile /out/.trivyignore \
+            --format json --output /out/trivy-image.json \
+            aegis:ci
+
+      - name: Scan image (gate)
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v ${{ github.workspace }}:/out \
+            aquasec/trivy image \
+            --severity HIGH,CRITICAL \
+            --exit-code 1 \
+            --scanners vuln \
+            --ignorefile /out/.trivyignore \
+            aegis:ci
+
       - name: Scan image (gate)
         run: |
           docker run --rm \
@@ -126,3 +150,4 @@ jobs:
         with:
           name: checkov-report
           path: results.sarif
+        

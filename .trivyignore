@@ -1,0 +1,5 @@
+# CVE-2026-84782 — libssl3 (openssl), HIGH, DTLS handshake retransmission
+# Aucune version corrigee disponible (Fixed Version vide, statut "affected", Debian 12).
+# Exception documentee : rien a patcher tant que Debian ne publie pas le fix.
+# A reevaluer a chaque montee de la base distroless.
+CVE-2026-84782
