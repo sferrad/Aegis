@@ -13,20 +13,20 @@ jobs:
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: p1/confs/Dockerfile
- 
-  gitleaks:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v4
-          with:
-            fetch-depth: 0
 
-        - name: Scan for secrets
-          uses: gitleaks/gitleaks-action@v2
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Scan for secrets
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   semgrep:
     runs-on: ubuntu-latest
     steps:
@@ -45,7 +45,7 @@ jobs:
         with:
           name: semgrep-report
           path: semgrep.sarif
-  
+
   sca:
     runs-on: ubuntu-latest
     steps:
@@ -68,7 +68,7 @@ jobs:
         with:
           name: sca-report
           path: trivy-sca.sarif
-  
+
   image-scan:
     runs-on: ubuntu-latest
     steps:
@@ -86,17 +86,6 @@ jobs:
             aquasec/trivy image \
             --severity HIGH,CRITICAL \
             --scanners vuln \
-            --format json --output /out/trivy-image.json \
-            aegis:ci
-
-            - name: Scan image (report)
-        run: |
-          docker run --rm \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            -v ${{ github.workspace }}:/out \
-            aquasec/trivy image \
-            --severity HIGH,CRITICAL \
-            --scanners vuln \
             --ignorefile /out/.trivyignore \
             --format json --output /out/trivy-image.json \
             aegis:ci
@@ -111,16 +100,6 @@ jobs:
             --exit-code 1 \
             --scanners vuln \
             --ignorefile /out/.trivyignore \
-            aegis:ci
-
-      - name: Scan image (gate)
-        run: |
-          docker run --rm \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            aquasec/trivy image \
-            --severity HIGH,CRITICAL \
-            --exit-code 1 \
-            --scanners vuln \
             aegis:ci
 
       - name: Upload report
@@ -129,7 +108,7 @@ jobs:
         with:
           name: image-scan-report
           path: trivy-image.json
-  
+
   checkov:
     runs-on: ubuntu-latest
     steps:
@@ -141,7 +120,8 @@ jobs:
         with:
           directory: p3/confs
           framework: terraform
-          output_format: cli
+          output_format: cli,sarif
+          output_file_path: console,results.sarif
           soft_fail: false
 
       - name: Upload report
@@ -150,4 +130,3 @@ jobs:
         with:
           name: checkov-report
           path: results.sarif
-        
