@@ -3,3 +3,10 @@
 # Exception documentee : rien a patcher tant que Debian ne publie pas le fix.
 # A reevaluer a chaque montee de la base distroless.
 CVE-2026-84782
+
+# CVE-2026-107494 : libssl3 (openssl), HIGH, DoS via file de trames QUIC non bornee
+# Aucune version corrigee disponible (Fixed Version vide, statut "affected", Debian 12).
+# Non exploitable ici : le binaire Rust n'utilise pas OpenSSL (zero dependance, HTTP en clair,
+# ni TLS ni QUIC). libssl3 n'est present que parce que l'image de base distroless/cc l'embarque.
+# Exception temporaire : a supprimer en passant a un binaire statique (cible musl) sur distroless/static.
+CVE-2026-107494
